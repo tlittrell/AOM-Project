@@ -13,7 +13,7 @@ for (i in data.files) {
            Player = str_extract(Player, pattern = "^[A-Za-z\\s-\\.]+"))
   data = rbind(data, temp)
 }
-
+write.csv(data, file = "Combined data.csv")
 
 
 
