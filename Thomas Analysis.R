@@ -17,13 +17,13 @@ clusters = kmeans(df_cluster,5)
 clusters
 
 df2 = df2 %>%
-  mutate(cluster = factor(clusters$cluster))
+  mutate(cluster = clusters$cluster)
 
 
 # Plots
 df2 %>%
   ggplot() + 
-  aes(x = X3PA, y = X2PA, color = cluster) + 
+  aes(x = X3PA, y = X2PA, color = factor(cluster)) + 
   geom_point()
   
 df2 %>% 
@@ -55,3 +55,9 @@ df2 %>%
   ggplot() +
   aes(x = cluster, y = PF) +
   geom_boxplot()
+
+a = df2 %>%
+  group_by(cluster) %>%
+  count(Pos)
+ 
+df2 %>% count(Pos)
