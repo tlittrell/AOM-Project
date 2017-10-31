@@ -17,47 +17,54 @@ clusters = kmeans(df_cluster,5)
 clusters
 
 df2 = df2 %>%
-  mutate(cluster = clusters$cluster)
+  mutate(cluster = factor(clusters$cluster))
 
 
 # Plots
 df2 %>%
   ggplot() + 
-  aes(x = X3PA, y = X2PA, color = factor(cluster)) + 
-  geom_point()
+  aes(x = X3PA, y = X2PA, color = cluster) + 
+  geom_point() +
+  theme_bw()
   
 df2 %>% 
   ggplot() + 
   aes(x = cluster, y = TRB) + 
-  geom_boxplot()
+  geom_boxplot() +
+  theme_bw()
 
 df2 %>%
   ggplot() +
   aes(x = cluster, y = AST) +
-  geom_boxplot()
+  geom_boxplot() +
+  theme_bw()
 
 df2 %>%
   ggplot() +
   aes(x = cluster, y = STL) +
-  geom_boxplot()
+  geom_boxplot() +
+  theme_bw()
 
 df2 %>%
   ggplot() +
   aes(x = cluster, y = BLK) +
-  geom_boxplot()
+  geom_boxplot() +
+  theme_bw()
 
 df2 %>%
   ggplot() +
   aes(x = cluster, y = TOV) +
-  geom_boxplot()
+  geom_boxplot() +
+  theme_bw()
 
 df2 %>%
   ggplot() +
   aes(x = cluster, y = PF) +
-  geom_boxplot()
+  geom_boxplot() +
+  theme_bw()
 
 a = df2 %>%
   group_by(cluster) %>%
-  count(Pos)
+  count(Pos) +
+  theme_bw()
  
-df2 %>% count(Pos)
