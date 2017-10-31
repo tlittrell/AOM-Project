@@ -50,10 +50,21 @@ df_cluster = df2 %>%
 
 clusters = kmeans(df_cluster,5)
 clusters
+clusters$betweenss/clusters$totss
 
 df2 = df2 %>%
   mutate(cluster = factor(clusters$cluster))
 
+# check cluster fit
+cluster_fit_curve = function(x){
+  result = rep(0,x)
+  for (i in 1:x){
+    clus = kmeans(df_cluster,i)
+    result[i] = clus$betweenss/clus$totss
+  }
+  plot(result)
+}
+cluster_fit_curve(10)
 
 # Plots
 df2 %>%
