@@ -66,12 +66,26 @@ cluster_fit_curve = function(x){
 }
 cluster_fit_curve(10)
 
+
+# K-Means clustering
+
 clusters = kmeans(df_cluster,4)
 clusters
 clusters$betweenss/clusters$totss
 
 df2 = df2 %>%
   mutate(cluster = factor(clusters$cluster))
+
+
+# Ward Hierarchical Clustering
+# Taken from https://www.statmethods.net/advstats/cluster.html
+d <- dist(df_cluster, method = "euclidean") # distance matrix
+fit <- hclust(d, method="ward.D") 
+plot(fit) # display dendogram
+groups <- cutree(fit, k=5) # cut tree into 5 clusters
+# draw dendogram with red borders around the 5 clusters 
+rect.hclust(fit, k=5, border="red")
+fit$labels
 
 # Get representative players
 df2 %>%
@@ -86,6 +100,12 @@ df2 %>% group_by(cluster) %>%
   summarise(mean_pts = mean(PTS), mean_ast = mean(AST), mean_trb = mean(TRB))
 
 # Plots
+
+#Taken from https://www.statmethods.net/advstats/cluster.html
+library(cluster) 
+clusplot(df_cluster, clusters$cluster, color=TRUE, shade=TRUE, 
+         labels=2, lines=0)
+
 df2 %>%
   ggplot() +
   aes(x = cluster, y = PosNum) +
@@ -134,6 +154,4 @@ df2 %>%
   aes(x = cluster, y = PF) +
   geom_boxplot() +
   theme_bw()
-
- 
 
