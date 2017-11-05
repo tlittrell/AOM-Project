@@ -52,7 +52,7 @@ df_cluster = df2 %>%
 cor(df_cluster)
 
 # check cluster fit
-cluster_fit_curve = function(x){
+scree_plot = function(x){
   result = rep(0,x)
   for (i in 1:x){
     clus = kmeans(df_cluster,i)
@@ -64,28 +64,23 @@ cluster_fit_curve = function(x){
     theme_bw() + 
     labs(x = "Number of clusters", y = "Within cluster SS")
 }
-cluster_fit_curve(10)
+scree_plot(10)
 
 
 # K-Means clustering
-
 clusters = kmeans(df_cluster,4)
-clusters
-clusters$betweenss/clusters$totss
-
 df2 = df2 %>%
   mutate(cluster = factor(clusters$cluster))
 
 
 # Ward Hierarchical Clustering
 # Taken from https://www.statmethods.net/advstats/cluster.html
-d <- dist(df_cluster, method = "euclidean") # distance matrix
-fit <- hclust(d, method="ward.D") 
-plot(fit) # display dendogram
-groups <- cutree(fit, k=5) # cut tree into 5 clusters
-# draw dendogram with red borders around the 5 clusters 
-rect.hclust(fit, k=5, border="red")
-fit$labels
+# and https://www.r-bloggers.com/hierarchical-clustering-in-r-2/
+# d = dist(df_cluster, method = "euclidean") # distance matrix
+# fit = hclust(d, method="ward.D") 
+# hierarchical_clusters = cutree(fit,4)
+# df2 = df2 %>%
+#   mutate(cluster = factor(hierarchical_clusters))
 
 # Get representative players
 df2 %>%
