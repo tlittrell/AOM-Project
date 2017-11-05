@@ -45,26 +45,42 @@ df2 = df %>%
 
 # Run clusters and append to the data frame
 df_cluster = df2 %>% 
-  select(-Player, -MP, -Year, -X,-Rk,-Pos, -PosNum, -Age,-Tm,-G,-GS, -X3P., -FG., -FG, -FGA, -FT., -PTS) %>%
-  biScale()
+  select(-Player, -MP, -Year, -X,-Rk,-Pos, -PosNum, -Age,-Tm,-G,-GS, -X3P., -FG., -FG, -FGA, 
+         -FT., -PTS, -X3P, -X2P, -TRB, -FT) %>%
+  biScale(.,row.center = FALSE, row.scale = FALSE)
 
-clusters = kmeans(df_cluster,5)
-clusters
-clusters$betweenss/clusters$totss
-
-df2 = df2 %>%
-  mutate(cluster = factor(clusters$cluster))
+cor(df_cluster)
 
 # check cluster fit
 cluster_fit_curve = function(x){
   result = rep(0,x)
   for (i in 1:x){
     clus = kmeans(df_cluster,i)
-    result[i] = clus$betweenss/clus$totss
+    result[i] = clus$tot.withinss
   }
-  plot(result)
+  ggplot() +
+    aes(x = seq(1:x), y = result) + 
+    geom_line() + 
+    theme_bw() + 
+    labs(x = "Number of clusters", y = "Within cluster SS")
 }
 cluster_fit_curve(10)
+
+clusters = kmeans(df_cluster,4)
+clusters
+clusters$betweenss/clusters$totss
+
+df2 = df2 %>%
+  mutate(cluster = factor(clusters$cluster))
+
+# Get representative players
+players = df2 %>%
+  filter(cluster == 1, Year == 2016) %>%
+  arrange(desc(MP))
+
+# Summary statistics
+df2 %>% group_by(cluster) %>%
+  summarise(mean_pts = mean(PTS), mean_ast = mean(AST), mean_trb = mean(TRB))
 
 # Plots
 df2 %>%
@@ -73,6 +89,9 @@ df2 %>%
   geom_boxplot() +
   theme_bw()
 
+
+
+# 
 df2 %>%
   ggplot() + 
   aes(x = X3PA, y = X2PA, color = cluster) + 
