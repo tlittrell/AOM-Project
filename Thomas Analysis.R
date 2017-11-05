@@ -74,9 +74,12 @@ df2 = df2 %>%
   mutate(cluster = factor(clusters$cluster))
 
 # Get representative players
-players = df2 %>%
-  filter(cluster == 1, Year == 2016) %>%
-  arrange(desc(MP))
+df2 %>%
+  filter(Year == 2016, MP > 2000) %>%
+  select(Player, PTS, MP, cluster) %>%
+  arrange_(~ desc(PTS)) %>%
+  group_by_(~ cluster) %>%
+  do(head(., n = 5))
 
 # Summary statistics
 df2 %>% group_by(cluster) %>%
@@ -89,9 +92,7 @@ df2 %>%
   geom_boxplot() +
   theme_bw()
 
-
-
-# 
+# Box plots
 df2 %>%
   ggplot() + 
   aes(x = X3PA, y = X2PA, color = cluster) + 
