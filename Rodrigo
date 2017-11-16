@@ -1,0 +1,28 @@
+ibrary(plotly)
+require(reshape2)
+require(dplyr)
+require(ggplot2)
+
+
+df_cluster = read.csv("df_cluster.csv")
+df_cluster$Cluster <- as.factor(df_cluster$Cluster)
+  
+df.m <- melt(df_cluster, id.var = "Cluster")
+
+
+p <- ggplot(data = df.m, aes(x=variable, y=value)) 
+p <- p + geom_boxplot(aes(fill = Cluster))
+p <- p + facet_wrap( ~ variable, scales="free")
+p <- p + xlab("Cluster") + ylab("Value") + ggtitle("Title")
+p <- p + guides(fill=guide_legend(title="Cluster"))
+p
+
+
+#3D scatter plot with clusters. X,Y,Z variables as examples
+p3d <- plot_ly(df_cluster, x = ~ORB, y = ~FTA, z = ~STL, color = ~Cluster, colors = c('#BF382A', '#0C4B8E', '#00CD66')) %>%
+  add_markers() %>%
+  layout(scene = list(xaxis = list(title = 'X'),
+                      yaxis = list(title = 'y'),
+                      zaxis = list(title = 'z')))
+# Pending: Could not find how to show both plots at the same time (one shows in plot and the other in viewer)
+
