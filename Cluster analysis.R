@@ -176,8 +176,7 @@ dfCART_Test = subset(dfCART, spl==FALSE)
 ### CART Model
 CARTmod = rpart(cluster ~.,
                 data = dfCART_Train, 
-                method="class", 
-                cp=0.02)
+                method="class")
 
 
 prp(CARTmod)
@@ -190,7 +189,7 @@ accuracy = sum(388,465,560,210)/nrow(dfCART_Test)
 
 ########## Alternate CART approach
 dfCART_alt <- cbind(df2, dummy(df2$cluster, sep = "_"))
-names(dfCART_alt)[35:38] <- c("cluster1","cluster2","cluster3","cluster4")
+names(dfCART_alt)[34:37] <- c("cluster1","cluster2","cluster3","cluster4")
 
 ### Create DFs for CART
 dfCART_1 = dfCART_alt %>% 
