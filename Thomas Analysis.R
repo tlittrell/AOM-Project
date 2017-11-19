@@ -107,6 +107,7 @@ df2 %>%
   geom_boxplot() +
   theme_bw()
 
+
 # Box plots
 df2 %>%
   ggplot() + 
@@ -150,3 +151,4 @@ df2 %>%
   geom_boxplot() +
   theme_bw()
 
+write_csv(df2,"/Users/thomaslittrell/Dropbox (MIT)/AOM Project/Data/clustered_data.csv")
