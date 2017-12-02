@@ -323,5 +323,27 @@ prp(CARTmod_4)
 rpart.plot(CARTmod_4, main="Cluster 4", extra = 100)
 
 
-write_csv(df2,"/Users/thomaslittrell/Dropbox (MIT)/AOM Project/Data/clustered_data.csv")
+
+### Bring in advanced stats
+library(readxl)
+library(stringr)
+
+setwd("~/Dropbox (MIT)/AOM Project/Data/Advanced stats")
+data.files = list.files(pattern="*.xlsx")
+
+advanced_stats = data.frame()
+for (i in data.files) {
+  year = substr(i,start=1,stop = 4) %>% as.numeric()
+  temp = read_excel(i) %>%
+    mutate(Year = year,
+           Player = str_extract(Player, pattern = "^[A-Za-z\\s-\\.]+"))
+  advanced_stats = rbind(advanced_stats, temp)
+}
+
+
+df_final = merge(df2, advanced_stats) %>%
+  arrange(Year, Rk)
+
+
+write_csv(df_final,"/Users/thomaslittrell/Dropbox (MIT)/AOM Project/Data/clustered_data.csv")
 
