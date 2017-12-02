@@ -1,6 +1,5 @@
 library(tidyverse)
 library(softImpute)
-set.seed(144)
 setwd("~/Dropbox (Personal)/MIT/Fall 2017/Analytics of Operations Management/Project/AOM-Project")
 
 # Read in and clean data
@@ -69,6 +68,7 @@ scree_plot(10)
 
 
 # K-Means clustering
+set.seed(144)
 clusters = kmeans(df_cluster,4)
 df2 = df2 %>%
   mutate(cluster = factor(clusters$cluster))
@@ -82,6 +82,26 @@ df2 = df2 %>%
 # hierarchical_clusters = cutree(fit,4)
 # df2 = df2 %>%
 #   mutate(cluster = factor(hierarchical_clusters))
+
+
+### ADD CLUSTER NAMES ###
+### WARNING: MUST BE REDONE WHEN CLUSTERING IS RERUN ###
+cluster_name = function(x){
+  if (x == 1){
+    return("Wing")
+  }else if (x == 2){
+    return("Center")
+  }else if (x == 3){
+    return("Guard")
+  }else if (x==4){
+    return("Forward")
+  }
+}
+
+
+df2 = df2 %>%
+  mutate(cluster_names = sapply(cluster,cluster_name))
+
 
 # Get representative players
 df2 %>%
@@ -151,6 +171,18 @@ df2 %>%
   aes(x = cluster, y = PF) +
   geom_boxplot() +
   theme_bw()
+
+# over time
+df2 %>%
+  group_by(Year, cluster_names) %>%
+  summarise(count = n()) %>%
+  ggplot() +
+  aes(x = Year, y = count, color = cluster_names) +
+  geom_line() +
+  theme_bw() +
+  labs(y = "Number of players") +
+  scale_color_discrete(name = "Cluster")
+  
 
 #########
 
@@ -292,5 +324,4 @@ rpart.plot(CARTmod_4, main="Cluster 4", extra = 100)
 
 
 write_csv(df2,"/Users/thomaslittrell/Dropbox (MIT)/AOM Project/Data/clustered_data.csv")
-
 

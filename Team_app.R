@@ -23,7 +23,7 @@ ui <- shinyUI(dashboardPage(
     fluidRow(
       box(title = "Team module",
           fluidRow(
-            column(width = 6,
+            column(width = 5,
               box(title = "Team roster", width = NULL, status = "primary",
                 selectizeInput(
                   inputId = "pnames",
@@ -34,8 +34,8 @@ ui <- shinyUI(dashboardPage(
                 )
               )
             ),
-            column(width = 6,
-              box(title = "Summary stats", width = NULL, status = "primary",
+            column(width = 7,
+              box(title = "Summary stats (per 36 min)", width = NULL, status = "primary",
                   DT::dataTableOutput('team_summary_tbl')
               )
             )
@@ -50,7 +50,7 @@ server <- function(input, output) {
    
   output$team_summary_tbl <- 
     DT::renderDataTable({
-      data %>%
+      temp = data %>%
         filter(PlayerYear %in% input$pnames) %>%
         summarise("Points" = sum(PTS),
                   "Threes" = sum(X3P),
@@ -63,11 +63,15 @@ server <- function(input, output) {
                   "Turnovers" = sum(TOV),
                   "Personal Fouls" = sum(PF),
                   "Average Pos" = mean(PosNum),
-                  "Average Cluster" = mean(cluster)) %>%
-        t()
-   })
+                  "Average Cluster" = mean(cluster)) %>% 
+        t() %>%
+        data.frame() %>%
+        `colnames<-`("Team total")
+   },
+   options = list(pageLength = 12, searching = FALSE, lengthChange = FALSE, paging = FALSE))
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
 
