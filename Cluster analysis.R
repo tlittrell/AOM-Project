@@ -176,13 +176,13 @@ df2 %>%
 df2 %>%
   group_by(Year, cluster_names) %>%
   summarise(count = n()) %>%
+  mutate(frac = count / sum(count) * 100) %>%
   ggplot() +
-  aes(x = Year, y = count, color = cluster_names) +
+  aes(x = Year, y = frac, color = cluster_names) +
   geom_line() +
   theme_bw() +
-  labs(y = "Number of players") +
+  labs(y = "% of Players") +
   scale_color_discrete(name = "Cluster")
-  
 
 #########
 
