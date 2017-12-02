@@ -344,6 +344,5 @@ for (i in data.files) {
 df_final = merge(df2, advanced_stats) %>%
   arrange(Year, Rk)
 
-
 write_csv(df_final,"/Users/thomaslittrell/Dropbox (MIT)/AOM Project/Data/clustered_data.csv")
 
